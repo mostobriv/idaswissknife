@@ -29,7 +29,7 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 		if vu.item.citype == idaapi.VDI_EXPR:
 			item = vu.item
 			if not item.e.type.is_funcptr():
-				print("[!] Clicked item isn't a function pointer")
+				# Clicked item isn't a function pointer
 				return 0
 
 			struct_name = ""
@@ -45,7 +45,7 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 				struct_name = vtable_tinfo.get_type_name()
 			
 			else:
-				print("[!] Not memref or memptr choosen")
+				# Not memref or memptr choosen
 				return 0
 				
 			if len(struct_name) == 0:
