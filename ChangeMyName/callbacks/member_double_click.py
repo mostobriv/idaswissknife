@@ -92,7 +92,7 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 
 	def populating_popup(self, widget, popup_handle, vu):
 		# TODO
-		pass
+		return 0
 
 
 callbacks.hx_callback_manager.register(MemberDoubleClick())

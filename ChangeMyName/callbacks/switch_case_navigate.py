@@ -94,10 +94,13 @@ class GetCasesOfSwitch(actions.HexRaysPopupAction):
  
 	def find_parent_switch_of(self, item, cfunc):
 		while item != cfunc.body:
-			item = cfunc.body.find_parent_of(item).cinsn
+			item = cfunc.body.find_parent_of(item)
+			if item is None:
+				return None
+			item = item.to_specific_type
 			if item.op == idaapi.cit_switch:
 				return item
  
 		return None
- 
+
 actions.action_manager.register(GetCasesOfSwitch())
