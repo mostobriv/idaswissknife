@@ -27,25 +27,30 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 
 	def double_click(self, vu, shift_state):
 		if vu.item.citype == idaapi.VDI_EXPR:
-			item = vu.item
-			if not item.e.type.is_funcptr():
-				# Clicked item isn't a function pointer
+			item = vu.item.it.to_specific_type
+
+			if not isinstance(item, idaapi.cexpr_t):
+				return 0
+
+			expr = item
+			if not expr.type.is_funcptr():
+				# [!] Clicked item isn't a function pointer
 				return 0
 
 			struct_name = ""
 			
-			if item.e.op == idaapi.cot_memptr: # x->e
-				vtable_tinfo = item.e.x.type
+			if expr.op == idaapi.cot_memptr: # x->e
+				vtable_tinfo = expr.x.type
 				if vtable_tinfo.is_ptr():
 					vtable_tinfo = vtable_tinfo.get_pointed_object()
 				struct_name = vtable_tinfo.get_type_name()
 
-			elif item.e.op == idaapi.cot_memref: # x.e
-				vtable_tinfo = item.e.x.type
+			elif expr.op == idaapi.cot_memref: # x.e
+				vtable_tinfo = expr.x.type
 				struct_name = vtable_tinfo.get_type_name()
 			
 			else:
-				# Not memref or memptr choosen
+				# [!] Not memref or memptr choosen
 				return 0
 				
 			if len(struct_name) == 0:
@@ -57,7 +62,7 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 				return 0
 				
 			sptr = idaapi.get_struc(sid)
-			mid = idaapi.get_member_id(sptr, item.e.m)
+			mid = idaapi.get_member_id(sptr, expr.m)
 			comment = idaapi.get_member_cmt(mid, False)
 			func_ea = idaapi.BADADDR
 			if comment:
@@ -71,9 +76,9 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 				return 0
 			
 			if shift_state & idaapi.VES_CTRL:
-				parent = vu.cfunc.body.find_parent_of(item.e).cexpr
+				parent = vu.cfunc.body.find_parent_of(expr).it.to_specific_type
 				while parent.op == idaapi.cot_cast:
-					parent = vu.cfunc.body.find_parent_of(parent).cexpr
+					parent = vu.cfunc.body.find_parent_of(parent).it.to_specific_type
 				
 				if parent.op == idaapi.cot_call and parent.ea != idaapi.BADADDR and \
 				   not cref_exists(parent.ea, func_ea) and idaapi.add_cref(parent.ea, func_ea, idaapi.fl_CN):
