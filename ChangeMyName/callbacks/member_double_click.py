@@ -76,9 +76,9 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 				return 0
 			
 			if shift_state & idaapi.VES_CTRL:
-				parent = vu.cfunc.body.find_parent_of(expr).it.to_specific_type
+				parent = vu.cfunc.body.find_parent_of(expr).to_specific_type
 				while parent.op == idaapi.cot_cast:
-					parent = vu.cfunc.body.find_parent_of(parent).it.to_specific_type
+					parent = vu.cfunc.body.find_parent_of(parent).to_specific_type
 				
 				if parent.op == idaapi.cot_call and parent.ea != idaapi.BADADDR and \
 				   not cref_exists(parent.ea, func_ea) and idaapi.add_cref(parent.ea, func_ea, idaapi.fl_CN):
