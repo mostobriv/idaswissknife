@@ -4,11 +4,17 @@ import idautils
 from . import callbacks
 from ChangeMyName.forms import MyChoose
 
+from collections import defaultdict
+import re
+
+
+OBJC_FUNCNAME_PATTERN = re.compile(r"(?<=[-+]\[)[\w_:]+ ([\w_:]+)(?=\])")
 
 class MsgSendDoubleClick(callbacks.HexRaysEventHook):
 	def __init__(self):
 		super().__init__()
-		self.__functions_cache = list()
+		self.__functions_cache = defaultdict(list)
+		self.__previously_revised = 0
 
 	def double_click(self, vu, shift_state):
 		if vu.item.citype == idaapi.VDI_EXPR:
@@ -34,7 +40,7 @@ class MsgSendDoubleClick(callbacks.HexRaysEventHook):
 			if len(args) < 2 and args[1].op != idaapi.cot_obj:
 				return 0
 			
-			method_name = idaapi.get_strlit_contents(args[1].obj_ea, -1, idaapi.STRTYPE_C)
+			method_name = idaapi.get_strlit_contents(args[1].obj_ea, -1, idaapi.STRTYPE_C).decode()
 			if len(method_name) == 0:
 				return 0
 
@@ -58,20 +64,17 @@ class MsgSendDoubleClick(callbacks.HexRaysEventHook):
 		return 0
 
 	def find_method_candidates(self, candidate_name):
-		candidates = list()
-		for address, name in self.__functions_cache:
-			if name.endswith(candidate_name.decode()+']'):
-				candidates.append((address, name))
-		
-		return candidates
+		return self.__functions_cache[candidate_name]
 
 	def __update_functions_cache(self):
-		if len(self.__functions_cache) != idaapi.get_func_qty():
+		if self.__previously_revised != idaapi.get_func_qty():
+			self.__previously_revised = idaapi.get_func_qty()
 			self.__functions_cache.clear()
 			for address in idautils.Functions():
 				name = idaapi.get_name(address)
-				if name[0] in ['+', '-'] and name[1] == '[' and name[-1] == ']':
-					self.__functions_cache.append((address, name))
+				match_result = OBJC_FUNCNAME_PATTERN.search(name)
+				if match_result:
+					self.__functions_cache[match_result.group(1)].append((address, name))
 
 
 callbacks.hx_callback_manager.register(MsgSendDoubleClick())
