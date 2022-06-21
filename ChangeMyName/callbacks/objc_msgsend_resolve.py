@@ -49,6 +49,11 @@ class MsgSendDoubleClick(callbacks.HexRaysEventHook):
 			if len(candidates) == 0:
 				return 0
 				
+
+			if len(candidates) == 1:
+				idaapi.jumpto(candidates[0][0])
+				return 1
+
 			preview_candidates = [('%#x' % address, name) for address, name in candidates]
 			candidate_chooser = MyChoose(preview_candidates,
 						"Possible candidates",
