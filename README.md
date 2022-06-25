@@ -11,3 +11,11 @@ Simple feature imitating Hopper Disassembler functionality when clicking on indi
 * choose candidate to jump
 
 ![test](/img/objc_msgsend_resolve_example.png)
+
+### Switch cases navigation
+
+Choose the specific case code to jump in pseudocode.
+* right-click anywhere inside of switch construction and `Get cases of switch`
+* choose case to jump
+
+![test](/img/case_navigating_exmample.png)
