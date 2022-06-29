@@ -1,6 +1,8 @@
 # idaswissknife
+This repo just a bunch of helper-scripts (wrapped in IDA Pro plugin in manner of [HexRaysPyTools](https://github.com/igogo-x86/HexRaysPyTools/) ) developed and used in daily work cases.
+
 TODO:
-- Change my name
+- [ ] Change my name
 
 ## Callbacks
 
