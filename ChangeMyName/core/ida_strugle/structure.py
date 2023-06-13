@@ -4,8 +4,8 @@ import idaapi
 import idautils
 import idc
 
-from ida_strugle import const
-from ida_strugle import util
+from . import const
+from . import util
 
 
 import re

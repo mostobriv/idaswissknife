@@ -18,3 +18,10 @@ Choose the specific case code to jump in pseudocode.
 * choose case to jump
 
 ![test](/img/case_navigating_exmample.png)
+
+
+### Show outgoing calls
+
+Similar to `xref from` feature, but shows only first layer of called functions (helpers like BYTE, WORD, DWORD, etc. excluded).
+
+![test](/img/outgoing_calls.png)

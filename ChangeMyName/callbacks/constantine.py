@@ -42,7 +42,7 @@ class Constantine(actions.Action):
 			return
 
 	def update(self, ctx):
-		if ctx.widget_type == idaapi.BWN_PSEUDOCODE or ctx.widget_type == idaapi.BWN_DISASM:
+		if ctx.widget_type in (idaapi.BWN_DISASM, idaapi.BWN_PSEUDOCODE):
 			return idaapi.AST_ENABLE_FOR_WIDGET
 		return idaapi.AST_DISABLE_FOR_WIDGET
 

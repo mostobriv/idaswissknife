@@ -3,6 +3,7 @@ import ida_hexrays
 import ida_lines
 
 from . import callbacks
+from ChangeMyName.core import ida_strugle
 
 def try_extract_address(node):
 	pass
@@ -80,10 +81,16 @@ class MemberDoubleClick(callbacks.HexRaysEventHook):
 				while parent.op == idaapi.cot_cast:
 					parent = vu.cfunc.body.find_parent_of(parent).to_specific_type
 				
-				if parent.op == idaapi.cot_call and parent.ea != idaapi.BADADDR and \
-				   not cref_exists(parent.ea, func_ea) and idaapi.add_cref(parent.ea, func_ea, idaapi.fl_CN):
+				if parent.op != idaapi.cot_call or parent.ea == idaapi.BADADDR:
+					return 0
+				
+				if cref_exists(parent.ea, func_ea):
+					return 0
+				
+				if not ida_strugle.misc.add_call_ref(parent.ea, func_ea, idaapi.fl_CN):
+					return 0
 					
-					print("[*] Added cref from %#x to %#x" % (parent.ea, func_ea))
+				print("[*] Added cref from %#x to %#x" % (parent.ea, func_ea))
 			
 			idaapi.jumpto(func_ea)
 			return 1

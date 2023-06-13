@@ -1,8 +1,8 @@
 import idaapi
 
 
-from ida_strugle.structure import Structure, FunctionPointer
-from ida_strugle import util, const
+from .structure import Structure, FunctionPointer
+from . import util, const
 
 class VirtualTable(Structure):
 

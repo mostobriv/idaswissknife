@@ -32,7 +32,7 @@ class GetCasesOfSwitch(actions.HexRaysPopupAction):
 
 	def __init__(self):
 		super().__init__()
- 
+
 	def activate(self, ctx):
 		vdui = idaapi.get_widget_vdui(ctx.widget)
 
@@ -52,13 +52,12 @@ class GetCasesOfSwitch(actions.HexRaysPopupAction):
 			return
 			
 		switch = switch_insn.cswitch
-			 
 		concrete_cases, default_case = self.fetch_cases(switch)
- 
+
 		chooser_cases = [['%#x' % address, 'case %d: // %#x' % (value, value)] for address, value in concrete_cases]
 		if default_case is not None:
 			chooser_cases.append(['%#x' % default_case[0], "default:"])
- 
+
 		case_chooser = MyChoose(chooser_cases,
 								"Cases of switch at %#x" % switch_insn.ea,
 								[["Address", 10 | MyChoose.CHCOL_HEX], ["Case value", 20]]
@@ -66,7 +65,7 @@ class GetCasesOfSwitch(actions.HexRaysPopupAction):
 		idx = case_chooser.Show(True)
 		if idx != -1:
 			idaapi.jumpto((concrete_cases + [default_case])[idx][0])
- 
+
 	def fetch_cases(self, cswitch) -> list:
 		concrete_cases = list()
 		default_case = None
@@ -75,23 +74,23 @@ class GetCasesOfSwitch(actions.HexRaysPopupAction):
 			if len(case.values) > 0:
 				for value in case.values:
 					concrete_cases.append((case.ea, value))
- 
+
 			# default case
 			else:
 				default_case = (case.ea, None)
- 
+
 		return concrete_cases, default_case
- 
+
 	def check(self, vdui) -> bool:
 		if vdui.item.citype == idaapi.VDI_EXPR and vdui.item.i.op == idaapi.cit_switch:
 			return True
- 
+
 		items = get_line_items(vdui, vdui.cpos.lnnum)
 		if len(items) == 0:
 			return False
 
 		return self.find_parent_switch_of(items[-1], vdui.cfunc) is not None or items[-1].op == idaapi.cit_switch
- 
+
 	def find_parent_switch_of(self, item, cfunc):
 		while item != cfunc.body:
 			item = cfunc.body.find_parent_of(item)
@@ -100,7 +99,7 @@ class GetCasesOfSwitch(actions.HexRaysPopupAction):
 			item = item.to_specific_type
 			if item.op == idaapi.cit_switch:
 				return item
- 
+
 		return None
 
 actions.action_manager.register(GetCasesOfSwitch())

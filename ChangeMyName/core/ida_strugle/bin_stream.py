@@ -1,8 +1,7 @@
 import idaapi
 import ida_bytes
 
-# from ida_strugle import util
-idaapi.require('ida_strugle.util')
+from . import util
 
 class Stream:
 
@@ -27,17 +26,15 @@ class Stream:
         return res
 
     def read_xword(self):
-        if bitness == 32:
+        if self.bitness == 32:
             res = ida_bytes.get_dword(self.addr)
-        elif bitness == 64:
+        elif self.bitness == 64:
             res = ida_bytes.get_qword(self.addr)
         else: # bitness == 16
             res = ida_bytes.get_word(self.addr)
         self.inc(self.bitness >> 3)
 
         return res
-
-    # def deref(self):
 
     def get_addr(self):
         return addr

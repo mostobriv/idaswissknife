@@ -2,8 +2,7 @@ import idaapi
 
 # from ida_strugle import util
 
-idaapi.require('ida_strugle')
-from ida_strugle import util
+from . import util
 
 
 
