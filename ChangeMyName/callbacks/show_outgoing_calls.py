@@ -61,8 +61,9 @@ class ShowOutgoingCalls(actions.HexRaysPopupAction):
         max_expr_len = max(calls, key=lambda x: len(x.expression)).address
         prepared_calls = [('%#x' % c.address, c.expression) for c in calls]
 
+        
         call_chooser = MyChoose(prepared_calls,
-							"Outgoing calls of %s" % ctx.cur_func,
+							"Outgoing calls of %s" % idaapi.get_ea_name(ctx.cur_func.start_ea),
 							[["Address", 10 | MyChoose.CHCOL_HEX], ["Call expression", min(max_expr_len, 32)]]
 						)
         idx = call_chooser.Show(True)
