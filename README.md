@@ -23,5 +23,7 @@ Choose the specific case code to jump in pseudocode.
 ### Show outgoing calls
 
 Similar to `xref from` feature, but shows only first layer of called functions (helpers like BYTE, WORD, DWORD, etc. excluded).
+* right-click anywhere inside of function
+* choose function call
 
 ![test](/img/outgoing_calls.png)
