@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import typing
+from typing import List
 import re
 
 import idaapi
@@ -42,7 +43,7 @@ class CallVisitor(idaapi.ctree_visitor_t):
         helper_name = expr.x.helper
         return not bool(pattern.match(helper_name))
         
-def collect_calls(root_expr: idaapi.citem_t) -> list[CollectedEntry]: 
+def collect_calls(root_expr: idaapi.citem_t) -> List[CollectedEntry]: 
     visitor = CallVisitor()
     visitor.apply_to(root_expr, None)
     return visitor.collected
