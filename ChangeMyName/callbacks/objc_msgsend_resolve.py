@@ -4,6 +4,9 @@ import idautils
 from . import callbacks
 from ChangeMyName.forms import MyChoose
 
+from ChangeMyName.core import ida_strugle
+
+
 from collections import defaultdict
 import re
 
@@ -52,6 +55,12 @@ class MsgSendDoubleClick(callbacks.HexRaysEventHook):
 
 			if len(candidates) == 1:
 				idaapi.jumpto(candidates[0][0])
+
+				call_addr = parent_item.ea
+				if shift_state & idaapi.VES_CTRL and call_addr != idaapi.BADADDR:
+					# TODO: change it back to ida_strugle api
+					idaapi.add_cref(call_addr, candidates[0][0], idaapi.fl_CN | idaapi.XREF_USER)
+
 				return 1
 
 			preview_candidates = [('%#x' % address, name) for address, name in candidates]
@@ -64,6 +73,12 @@ class MsgSendDoubleClick(callbacks.HexRaysEventHook):
 				return 0
 
 			idaapi.jumpto(candidates[idx][0])
+			
+			call_addr = parent_item.ea
+			if shift_state & idaapi.VES_CTRL and call_addr != idaapi.BADADDR:
+				# TODO: change it back to ida_strugle api
+				idaapi.add_cref(call_addr, candidates[idx][0], idaapi.fl_CN | idaapi.XREF_USER)
+
 			return 1
 
 		return 0
