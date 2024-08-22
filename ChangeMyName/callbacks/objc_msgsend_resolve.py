@@ -34,7 +34,8 @@ class MsgSendDoubleClick(callbacks.HexRaysEventHook):
 			if item.op != idaapi.cot_obj or parent_item.op != idaapi.cot_call:
 				return 0
 
-			if idaapi.get_name(item.obj_ea) != '_objc_msgSend' and idaaapi.get_name(item.obj_ea) != '__imp__objc_msgSend':
+			# TODO: add support for ida9.0, as there objc_msgSend is fucking cot_helper not cot_obj
+			if idaapi.get_name(item.obj_ea) != '_objc_msgSend' and idaapi.get_name(item.obj_ea) != '__imp__objc_msgSend':
 				return 0
 
 			self.__update_functions_cache()
