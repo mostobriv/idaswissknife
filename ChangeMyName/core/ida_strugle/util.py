@@ -22,10 +22,9 @@ def is_valid_ea(ea):
     return idc.get_full_flags(ea) != 0
 
 def get_bitness():
-    info = idaapi.get_inf_structure()
-    if info.is_64bit():
+    if idaapi.inf_is_64bit():
         bitness = 64
-    elif info.is_32bit():
+    elif idaapi.inf_is_32bit_exactly():
         bitness = 32
     else:
         raise NotImplementedError
